@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+    <!-- component-scan 이 경로에 존재하는 패키지를 스캔해서 빈과 관련된 어노테이션을 인식 -->
+    <context:component-scan base-package="com.example.demo"/>
+
+    <!--   HikariCP 객체를 빈으로 설정 -->
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mariadb://localhost:3307/webdb"></property>
+        <property name="username" value="webuser"></property>
+        <property name="password" value="webuser"></property>
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="cachePrepStmts">true</prop>
+                <prop key="prepStmtCacheSize">250</prop>
+                <prop key="prepStmtCacheSqlLimit">2048</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+          destroy-method="close">
+        <constructor-arg ref="hikariConfig" />
+    </bean>
+
+    <!--    Mybatis 이용을 위한 SqlSessionFactory 빈 설정-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+
+        <!-- xml로 작성한 mapper를 사용하기 위한 설정 -->
+        <property name="mapperLocations" value="classpath:/mappers/**/*.xml"></property>
+
+    </bean>
+
+
+    <!-- Mapper 인터페이스를 이용하기 위한 mybatis.scan 설정   -->
+    <mybatis:scan base-package="com.example.demo.mapper"></mybatis:scan>
+
+
+    <!-- ModelMapperConfig를 빈으로 인식하기 위한 설정   -->
+    <context:component-scan base-package="com.example.demo.config"/>
+
+    <context:component-scan base-package="com.example.demo.service"/>
+
+    <context:component-scan base-package="com.example.demo.mapper"/>
+
+
+
+
+</beans>

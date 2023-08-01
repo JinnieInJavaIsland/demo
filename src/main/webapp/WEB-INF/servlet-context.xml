@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 웹 영역을 따로 분리하기위해 이 xml 파일에 웹 관련 설정을 작성함 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
+    <!--정적 파일 경로 및 정적 파일등을 요청. 경로나 폴더는 변경 가능-->
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!--  Controller 클래스들을 스프링으로 인식하기 위한 설정  -->
+    <context:component-scan base-package="com.example.demo.controller"/>
+
+</beans>
